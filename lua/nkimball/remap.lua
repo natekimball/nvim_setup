@@ -14,4 +14,8 @@ which_key.add({
 	{ "Q", "<nop>", desc = "Disable Ex mode" },
 	{ "<leader>cc", "<cmd> ClaudeCode<CR>", desc = "Toggle Claude Code" },
 	{ "<leader>rn", vim.lsp.buf.rename, desc = "Rename symbol" },
+	{ "<C-h>", "<C-w>h", desc = "Move to left window" },
+	{ "<C-j>", "<C-w>j", desc = "Move to below window" },
+	{ "<C-k>", "<C-w>k", desc = "Move to above window" },
+	{ "<C-l>", "<C-w>l", desc = "Move to right window" },
 })
