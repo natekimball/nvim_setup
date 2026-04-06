@@ -27,13 +27,38 @@ return {
     require("fidget").setup({})
     require("mason").setup()
 
+    -- LSP keybindings via LspAttach autocmd (runs after Neovim's defaults, so our mappings win)
+    vim.api.nvim_create_autocmd("LspAttach", {
+      group = vim.api.nvim_create_augroup("UserLspKeymaps", { clear = true }),
+      callback = function(ev)
+        local opts = { buffer = ev.buf, remap = false }
+
+        vim.keymap.set("n", "gd", function()
+          require("telescope.builtin").lsp_definitions()
+        end, vim.tbl_extend("force", opts, { desc = "Go to definition" }))
+        vim.keymap.set("n", "gD", vim.lsp.buf.declaration, vim.tbl_extend("force", opts, { desc = "Go to declaration" }))
+        vim.keymap.set("n", "gi", function()
+          require("telescope.builtin").lsp_implementations()
+        end, vim.tbl_extend("force", opts, { desc = "Go to implementation" }))
+        vim.keymap.set("n", "gr", function()
+          require("telescope.builtin").lsp_references()
+        end, vim.tbl_extend("force", opts, { desc = "Go to references" }))
+
+        vim.keymap.set("n", "K", vim.lsp.buf.hover, vim.tbl_extend("force", opts, { desc = "Hover documentation" }))
+        vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, vim.tbl_extend("force", opts, { desc = "Rename symbol" }))
+        vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, vim.tbl_extend("force", opts, { desc = "Code action" }))
+        vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, vim.tbl_extend("force", opts, { desc = "Previous diagnostic" }))
+        vim.keymap.set("n", "]d", vim.diagnostic.goto_next, vim.tbl_extend("force", opts, { desc = "Next diagnostic" }))
+      end,
+    })
+
     require('mason-lspconfig').setup({
       ensure_installed = {
-        -- "tsserver",
+        "ts_ls",
         "lua_ls",
         "ruff",
         "rust_analyzer",
-        "pyright",
+        "basedpyright"
       },
       handlers = {
         function(server_name)
