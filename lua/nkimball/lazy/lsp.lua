@@ -44,6 +44,12 @@ return {
           require("telescope.builtin").lsp_references()
         end, vim.tbl_extend("force", opts, { desc = "Go to references" }))
 
+        -- Remove default gr* mappings (covered by gr, <leader>ca, <leader>rn)
+        -- so that "gr" triggers instantly without waiting for grr/gra/grn
+        for _, key in ipairs({ "grr", "gra", "grn" }) do
+          pcall(vim.keymap.del, "n", key, { buffer = ev.buf })
+        end
+
         vim.keymap.set("n", "K", vim.lsp.buf.hover, vim.tbl_extend("force", opts, { desc = "Hover documentation" }))
         vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, vim.tbl_extend("force", opts, { desc = "Rename symbol" }))
         vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, vim.tbl_extend("force", opts, { desc = "Code action" }))
